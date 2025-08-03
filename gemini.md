@@ -65,3 +65,7 @@
 - **Simplificação do `vercel.json`:**
   - O arquivo `vercel.json` foi simplificado para usar `rewrites` em vez de `builds` e `routes`.
   - A nova configuração garante que as requisições para `/api/(.*)` sejam roteadas corretamente para as funções serverless e que todas as outras requisições sirvam o `index.html`, mantendo o comportamento de SPA.
+
+- **Atualização do Modelo Gemini:**
+  - O arquivo `netlify/functions/generateLesson.js` foi modificado para atualizar o modelo de linguagem da API Gemini.
+  - O nome do modelo foi alterado de `gemini-pro` para `gemini-1.5-flash-latest` para resolver um erro de modelo desatualizado.

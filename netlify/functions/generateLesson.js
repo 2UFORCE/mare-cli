@@ -74,7 +74,7 @@ exports.handler = async (event, context) => {
 
   try {
     const prompt = MASTER_PROMPT.replace('{frase_hebraica}', text);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
