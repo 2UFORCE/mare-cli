@@ -57,4 +57,11 @@
 - **Correção de Build (Vercel):**
   - O arquivo `src/ComprehensionQuiz.js` foi modificado para corrigir um erro de build da Vercel.
   - A função `setCurrentQuestionIndex`, que não estava sendo utilizada, foi omitida da desestruturação do `useState`, resolvendo o aviso de "variável não utilizada" que causava a falha no deploy.
---- End of Context from: GEMINI.md ---
+
+- **Refatoração da Estrutura de Pastas:**
+  - A pasta `api`, contendo a serverless function `generateLesson.js`, foi movida de `src/api` para a raiz do projeto (`/api`).
+  - Essa mudança alinha a estrutura do projeto com as convenções da Vercel, que espera encontrar as funções serverless no diretório `/api` na raiz.
+
+- **Simplificação do `vercel.json`:**
+  - O arquivo `vercel.json` foi simplificado para usar `rewrites` em vez de `builds` e `routes`.
+  - A nova configuração garante que as requisições para `/api/(.*)` sejam roteadas corretamente para as funções serverless e que todas as outras requisições sirvam o `index.html`, mantendo o comportamento de SPA.
