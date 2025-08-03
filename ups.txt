@@ -1,0 +1,116 @@
+Instruções para o Gemini CLI: Plano de Reconstrução
+
+Passo 1: A Limpeza
+
+Execute os seguintes comandos no terminal para remover os arquivos de configuração antigos:
+
+Delete o arquivo vercel.json, se existir.
+
+Delete a pasta .vercel, se existir.
+
+Passo 2: O package.json Raiz Definitivo
+
+Substitua todo o conteúdo do arquivo package.json na raiz do projeto pelo seguinte código JSON. Confirme que o arquivo antigo foi completamente sobrescrito.
+
+Generated json
+{
+  "name": "mare-cli",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@google/generative-ai": "^0.14.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+
+
+Passo 3: Verificação da Estrutura e package.json da API
+
+Verifique a estrutura de diretórios. Confirme que a pasta api está na raiz do projeto. Em seguida, crie ou sobrescreva o arquivo api/package.json para que ele contenha apenas o seguinte código JSON:
+
+Generated json
+{
+  "type": "module"
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Json
+IGNORE_WHEN_COPYING_END
+
+Passo 4: O vercel.json Minimalista e Correto
+
+Crie um novo arquivo chamado vercel.json na raiz do projeto. O único conteúdo deste arquivo deve ser o seguinte código JSON:
+
+Generated json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Json
+IGNORE_WHEN_COPYING_END
+
+Passo 5: Reinstalação Limpa (Execução Manual)
+
+Depois que o Gemini CLI confirmar que completou as tarefas acima, você precisará executar estes comandos manualmente no seu terminal padrão (CMD ou PowerShell), na raiz do projeto (C:\PROJETOS\mare-cli).
+
+Limpe as dependências antigas:
+
+Generated bash
+rm -rf node_modules package-lock.json
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Bash
+IGNORE_WHEN_COPYING_END
+
+(Lembre-se: rmdir /s /q node_modules e del package-lock.json no CMD se o comando acima falhar)
+
+Instale as dependências corretas:
+
+Generated bash
+npm install
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Bash
+IGNORE_WHEN_COPYING_END
+
+Após estes passos, seu projeto estará perfeitamente alinhado com o "Padrão Ouro" da Vercel. Você pode então proceder com os comandos do Git (git add, git commit, git push) para fazer o deploy final.
