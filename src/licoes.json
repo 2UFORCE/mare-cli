@@ -1,0 +1,41 @@
+{
+  "licoes": [
+    {
+      "id": 1,
+      "frase_chave": "הוּא קוֹרֵא סֵפֶר (Ele lê um livro)",
+      "palavras": [
+        {
+          "palavra_hebraica": "הוּא",
+          "transliteracao": "Hu",
+          "traducao": "Ele",
+          "raiz_shoresh": null,
+          "binyan": null,
+          "notas_gramaticais": "Pronome pessoal, masculino, singular"
+        },
+        {
+          "palavra_hebraica": "קוֹרֵא",
+          "transliteracao": "Koré",
+          "traducao": "Lê (masculino)",
+          "raiz_shoresh": "K-R-A",
+          "binyan": "Pa'al",
+          "notas_gramaticais": "Verbo, presente, masculino singular"
+        },
+        {
+          "palavra_hebraica": "סֵפֶר",
+          "transliteracao": "Séfer",
+          "traducao": "Livro",
+          "raiz_shoresh": "S-F-R",
+          "binyan": "Pa'al",
+          "notas_gramaticais": "Substantivo masculino"
+        }
+      ],
+      "perguntas": [
+        {
+          "pergunta": "O que a pessoa no texto está fazendo?",
+          "opcoes": ["Ele come um livro", "Ele lê um livro", "Ele escreve um livro", "Ele compra um livro"],
+          "resposta_correta": "Ele lê um livro"
+        }
+      ]
+    }
+  ]
+}
