@@ -10,7 +10,7 @@ const LessonGenerator = ({ onLessonGenerated }) => {
     setError(null);
 
     try {
-      const response = await fetch('/api/generateLesson', {
+      const response = await fetch('/.netlify/functions/generateLesson', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

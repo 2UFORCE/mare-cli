@@ -1,11 +1,8 @@
-// src/api/generateLesson.js
-
-// Carrega as variáveis de ambiente do arquivo .env
+// Adaptação para Netlify Functions
 require('dotenv').config();
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// Inicializa o Google AI SDK com a chave de API a partir das variáveis de ambiente
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const MASTER_PROMPT = `
@@ -43,21 +40,34 @@ Crie uma pergunta de compreensão relevante para o array "perguntas".
 Certifique-se de que o JSON seja válido e siga estritamente a estrutura definida.
 `;
 
-module.exports = async (req, res) => {
-  console.log("--- Função generateLesson foi chamada ---");
+exports.handler = async (event, context) => {
+  console.log("--- Função generateLesson (Netlify) foi chamada ---");
 
-  // Vercel Serverless Functions rodam em um ambiente somente leitura,
-  // então não podemos esperar que o .env seja carregado da mesma forma.
-  // As variáveis de ambiente devem ser configuradas no painel da Vercel.
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: `Method ${event.httpMethod} Not Allowed` }),
+      headers: { 'Allow': 'POST' }
+    };
   }
 
-  const { text } = req.body;
+  let text;
+  try {
+    const body = JSON.parse(event.body);
+    text = body.text;
+  } catch (e) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Corpo da requisição inválido ou não é JSON.' })
+    };
+  }
+
 
   if (!text) {
-    return res.status(400).json({ error: 'O corpo da requisição deve conter a propriedade "text".' });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'O corpo da requisição deve conter a propriedade "text".' })
+    };
   }
 
   console.log(`Gerando lição para o texto: "${text}"`);
@@ -74,7 +84,6 @@ module.exports = async (req, res) => {
     console.log(responseText);
     console.log('--- FIM DA RESPOSTA ---');
 
-    // Limpa a resposta para garantir que seja um JSON válido
     if (responseText.startsWith("```json")) {
       responseText = responseText.substring(7, responseText.length - 3).trim();
     }
@@ -85,17 +94,21 @@ module.exports = async (req, res) => {
     } catch (parseError) {
       console.error("Erro ao fazer o parse do JSON:", parseError);
       console.error("Texto que falhou no parse:", responseText);
-      // Joga um novo erro para ser pego pelo catch principal
       throw new Error("A resposta da API não é um JSON válido.");
     }
 
     console.log("JSON parseado com sucesso. Retornando para o cliente.");
     
-    // Retorna a resposta JSON para o cliente
-    return res.status(200).json(lessonJson);
+    return {
+      statusCode: 200,
+      body: JSON.stringify(lessonJson)
+    };
 
   } catch (error) {
     console.error("Erro ao chamar a API Gemini ou ao processar a resposta:", error);
-    return res.status(500).json({ error: 'Falha ao gerar a lição.', details: error.message });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Falha ao gerar a lição.', details: error.message })
+    };
   }
 };
