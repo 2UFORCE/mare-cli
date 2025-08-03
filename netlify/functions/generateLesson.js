@@ -84,25 +84,34 @@ exports.handler = async (event, context) => {
     console.log(responseText);
     console.log('--- FIM DA RESPOSTA ---');
 
-    if (responseText.startsWith("```json")) {
-      responseText = responseText.substring(7, responseText.length - 3).trim();
+    let jsonString = responseText;
+
+    // Lógica de limpeza robusta:
+    // Tenta encontrar o conteúdo entre { e } ou [ e ]
+    const jsonMatch = jsonString.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+
+    if (jsonMatch) {
+      jsonString = jsonMatch[0];
+    } else {
+      // Se não encontrar nenhum JSON, lança um erro claro
+      throw new Error("Nenhum conteúdo JSON válido encontrado na resposta da API.");
     }
 
-    let lessonJson;
     try {
-      lessonJson = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error("Erro ao fazer o parse do JSON:", parseError);
-      console.error("Texto que falhou no parse:", responseText);
-      throw new Error("A resposta da API não é um JSON válido.");
-    }
+      const lessonJson = JSON.parse(jsonString);
+      
+      console.log("JSON parseado com sucesso. Retornando para o cliente.");
 
-    console.log("JSON parseado com sucesso. Retornando para o cliente.");
-    
-    return {
-      statusCode: 200,
-      body: JSON.stringify(lessonJson)
-    };
+      // Retorna a resposta de sucesso
+      return {
+        statusCode: 200,
+        body: JSON.stringify(lessonJson),
+      };
+    } catch (error) {
+      console.error("Erro ao fazer o parse do JSON extraído:", error);
+      console.error("Texto que falhou no parse:", jsonString);
+      throw new Error("A resposta da API parecia JSON, mas continha um erro de sintaxe.");
+    }
 
   } catch (error) {
     console.error("Erro ao chamar a API Gemini ou ao processar a resposta:", error);

@@ -69,3 +69,12 @@
 - **Atualização do Modelo Gemini:**
   - O arquivo `netlify/functions/generateLesson.js` foi modificado para atualizar o modelo de linguagem da API Gemini.
   - O nome do modelo foi alterado de `gemini-pro` para `gemini-1.5-flash-latest` para resolver um erro de modelo desatualizado.
+
+- **Melhora na Extração de JSON:**
+  - A lógica de limpeza de JSON no arquivo `netlify/functions/generateLesson.js` foi substituída.
+  - Em vez de usar `substring`, agora uma expressão regular (`/\{[\s\S]*\}/`) é usada para extrair de forma robusta o conteúdo JSON da resposta da API, prevenindo erros de formatação.
+
+- **Robustez na Extração de JSON:**
+  - A lógica de extração de JSON em `netlify/functions/generateLesson.js` foi aprimorada.
+  - A nova implementação utiliza uma expressão regular mais completa (`/\{[\s\S]*\}|\[[\s\S]*\]/`) para capturar tanto objetos (`{...}`) quanto arrays (`[...]`) JSON.
+  - Adiciona um tratamento de erro específico para casos em que nenhum JSON é encontrado na resposta e outro para erros de sintaxe no JSON que foi extraído, tornando o processo mais resiliente.
