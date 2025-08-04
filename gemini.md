@@ -99,3 +99,8 @@
   - Foi adicionado um estado de `loading` ao componente `LessonGenerator.js`.
   - Quando o usuário clica em "Gerar Lição", o botão é desativado e o texto muda para "Gerando...".
   - O estado de `loading` é desativado (e o botão reativado) quando a chamada à API é concluída, seja com sucesso ou com erro, garantindo que a interface sempre volte a um estado funcional.
+
+- **Correção de Sintaxe da Função Netlify:**
+  - O arquivo `netlify/functions/generateLesson.js` foi completamente reescrito para corrigir um `UserCodeSyntaxError`.
+  - Toda a lógica, incluindo a inicialização do cliente da API e a definição do prompt, foi movida para dentro do `exports.handler` para garantir que a função seja carregada corretamente pelo ambiente da Netlify.
+  - O tratamento de erros foi aprimorado para ser mais robusto e fornecer mensagens claras em caso de falhas na requisição, na chamada da API ou na análise do JSON.
