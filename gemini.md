@@ -78,3 +78,24 @@
   - A lógica de extração de JSON em `netlify/functions/generateLesson.js` foi aprimorada.
   - A nova implementação utiliza uma expressão regular mais completa (`/\{[\s\S]*\}|\[[\s\S]*\]/`) para capturar tanto objetos (`{...}`) quanto arrays (`[...]`) JSON.
   - Adiciona um tratamento de erro específico para casos em que nenhum JSON é encontrado na resposta e outro para erros de sintaxe no JSON que foi extraído, tornando o processo mais resiliente.
+
+- **Aprimoramento do Master Prompt:**
+  - O prompt principal (`MASTER_PROMPT`) no arquivo `netlify/functions/generateLesson.js` foi atualizado.
+  - Novas instruções foram adicionadas para que a IA identifique todas as raízes (shorashim) possíveis, retorne `null` para palavras onde a raiz não é aplicável, e gere pelo menos duas perguntas de compreensão (uma geral e uma específica).
+
+- **Depuração e Refatoração do `RootConnectorExercise.js`:**
+  - O componente `RootConnectorExercise.js` foi refatorado para corrigir um bug que encerrava o exercício prematuramente em lições com múltiplas raízes.
+  - A lógica de estado foi aprimorada para rastrear separadamente a conclusão do desafio da raiz atual e a conclusão do exercício geral.
+  - O botão "Próxima Raiz" agora avança corretamente para o próximo desafio, resetando o estado do tabuleiro.
+  - Um título dinâmico foi adicionado para exibir o progresso do usuário (ex: "Exercício: Conecte as Palavras (1/3)").
+
+- **Aprimoramento Avançado do Master Prompt:**
+  - O `MASTER_PROMPT` em `netlify/functions/generateLesson.js` foi novamente aprimorado.
+  - A IA foi instruída a buscar pelo menos duas raízes distintas para enriquecer os exercícios.
+  - A estrutura do JSON de resposta foi modificada: a tradução da frase principal agora é retornada em um campo separado (`frase_chave_traducao`).
+  - A IA foi instruída a gerar duas perguntas de compreensão distintas: uma sobre o significado geral e outra focada em um detalhe específico.
+
+- **Feedback de Carregamento no `LessonGenerator.js`:**
+  - Foi adicionado um estado de `loading` ao componente `LessonGenerator.js`.
+  - Quando o usuário clica em "Gerar Lição", o botão é desativado e o texto muda para "Gerando...".
+  - O estado de `loading` é desativado (e o botão reativado) quando a chamada à API é concluída, seja com sucesso ou com erro, garantindo que a interface sempre volte a um estado funcional.

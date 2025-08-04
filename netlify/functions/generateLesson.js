@@ -8,36 +8,45 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const MASTER_PROMPT = `
 Você é um especialista em linguística hebraica e um pedagogo. Sua tarefa é analisar uma frase em hebraico e gerar uma lição estruturada em formato JSON.
 A frase para análise é: "{frase_hebraica}"
-Analise a frase e retorne um único objeto JSON, sem nenhum texto ou formatação adicional. O objeto JSON deve ter a seguinte estrutura:
+
+**Instruções Gerais:**
+1.  **Análise de Raízes (Shorashim):** Identifique TODAS as raízes verbais e nominais possíveis. Se o texto permitir, retorne pelo menos duas raízes distintas para enriquecer o exercício. Se o texto for muito curto, retorne apenas as que encontrar. Para palavras onde uma raiz não é claramente aplicável (ex: preposições, nomes próprios), o campo "raiz_shoresh" deve ser `null`.
+2.  **Estrutura do JSON:** A resposta DEVE ser um único objeto JSON, sem nenhum texto ou formatação adicional.
+3.  **Tradução Separada:** O campo "frase_chave" deve conter APENAS o texto em hebraico. A tradução correspondente em português DEVE ser colocada no campo "frase_chave_traducao".
+4.  **Perguntas de Compreensão:** Gere EXATAMENTE duas perguntas de múltipla escolha distintas:
+    *   A primeira pergunta deve ser sobre o significado geral ou o contexto da frase.
+    *   A segunda pergunta deve focar em um detalhe específico, como o significado de uma palavra-chave ou um aspecto gramatical.
+
+**Estrutura do Objeto JSON:**
 {
   "id": 1,
-  "frase_chave": "A frase em hebraico com sua tradução entre parênteses",
+  "frase_chave": "O texto original em hebraico, com niqud (vogais).",
+  "frase_chave_traducao": "A tradução da frase para o português.",
   "palavras": [
     {
-      "palavra_hebraica": "A palavra em hebraico, com niqud (vogais)",
+      "palavra_hebraica": "A palavra em hebraico, com niqud",
       "transliteracao": "A transliteração fonética da palavra",
       "traducao": "A tradução da palavra para o português",
       "raiz_shoresh": "A raiz de 3 letras (shoresh) da palavra, se aplicável. Caso contrário, null.",
-      "binyan": "O binyan (ex: Pa'al, Pi'el, Hif'il) da palavra, se for um verbo. Caso contrário, null.",
-      "notas_gramaticais": "Uma breve análise gramatical (ex: 'Verbo, presente, masculino singular', 'Substantivo feminino', 'Pronome pessoal')"
+      "binyan": "O binyan (ex: Pa'al, Pi'el) do verbo, se aplicável. Caso contrário, null.",
+      "notas_gramaticais": "Breve análise gramatical (ex: 'Verbo, presente, masc. singular')"
     }
   ],
   "perguntas": [
     {
-      "pergunta": "Uma pergunta de múltipla escolha sobre o significado ou contexto da frase-chave.",
-      "opcoes": [
-        "Opção A",
-        "Opção B (a resposta correta)",
-        "Opção C",
-        "Opção D"
-      ],
+      "pergunta": "Pergunta sobre o significado geral da frase.",
+      "opcoes": ["Opção A", "Opção B (correta)", "Opção C", "Opção D"],
       "resposta_correta": "O texto exato da Opção B"
+    },
+    {
+      "pergunta": "Pergunta focada em uma palavra ou detalhe específico.",
+      "opcoes": ["Opção A", "Opção B", "Opção C (correta)", "Opção D"],
+      "resposta_correta": "O texto exato da Opção C"
     }
   ]
 }
-Analise cada palavra da frase fornecida e preencha o array "palavras".
-Crie uma pergunta de compreensão relevante para o array "perguntas".
-Certifique-se de que o JSON seja válido e siga estritamente a estrutura definida.
+
+Analise cada palavra da frase fornecida, preencha o array "palavras", e crie as duas perguntas conforme as instruções. Certifique-se de que o JSON seja válido.
 `;
 
 exports.handler = async (event, context) => {

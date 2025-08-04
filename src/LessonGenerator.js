@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 const LessonGenerator = ({ onLessonGenerated }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Renomeado para 'loading' para clareza
   const [error, setError] = useState(null);
   const [text, setText] = useState('הוּא קוֹרֵא סֵפֶר'); // Texto de exemplo
 
   const handleGenerateClick = async () => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
 
     try {
@@ -19,9 +19,8 @@ const LessonGenerator = ({ onLessonGenerated }) => {
       });
 
       if (!response.ok) {
-        // Lança um erro se a resposta não for bem-sucedida (status não for 2xx)
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
+        const errorData = await response.json().catch(() => ({ error: `Erro HTTP: ${response.status}` }));
+        throw new Error(errorData.details || errorData.error || `Erro desconhecido do servidor.`);
       }
 
       const lessonData = await response.json();
@@ -30,9 +29,10 @@ const LessonGenerator = ({ onLessonGenerated }) => {
     } catch (err) {
       console.error("Erro ao gerar a lição:", err);
       setError(`Não foi possível gerar a lição. Detalhes: ${err.message}`);
-      setIsLoading(false);
+    } finally {
+      // Garante que o loading seja desativado, ocorrendo sucesso ou falha.
+      setLoading(false);
     }
-    // O isLoading será naturalmente false no sucesso, pois o componente será desmontado.
   };
 
   return (
@@ -48,10 +48,19 @@ const LessonGenerator = ({ onLessonGenerated }) => {
       />
       <button
         onClick={handleGenerateClick}
-        disabled={isLoading}
-        style={{ marginTop: '15px', padding: '12px 25px', fontSize: '1.1em', cursor: 'pointer' }}
+        disabled={loading}
+        style={{ 
+          marginTop: '15px', 
+          padding: '12px 25px', 
+          fontSize: '1.1em', 
+          cursor: loading ? 'not-allowed' : 'pointer',
+          backgroundColor: loading ? '#ccc' : '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px'
+        }}
       >
-        {isLoading ? 'Gerando...' : 'Gerar Lição'}
+        {loading ? 'Gerando...' : 'Gerar Lição'}
       </button>
       {error && <p style={{ color: 'red', marginTop: '15px' }}>{error}</p>}
     </div>
